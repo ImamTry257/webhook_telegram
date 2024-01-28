@@ -21,7 +21,7 @@ class IndexController extends Controller
 
         if (strpos($message, "/start") === 0) {
 
-            Http::post($api_url . "/sendmessage?chat_id=" . $chatID . "&text=Haloo, test webhooks dicoffeean.com.&parse_mode=HTML");
+            Http::post($api_url . "/sendmessage?chat_id=" . $chatID . "&text=Haloo, test chat ID = " . $chatID . ".&parse_mode=HTML");
         }
 
         return response()->json([

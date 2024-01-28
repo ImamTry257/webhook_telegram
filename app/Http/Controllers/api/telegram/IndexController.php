@@ -11,24 +11,36 @@ class IndexController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $TOKEN = env('TOKEN_BOOT');
         $api_url = "https://api.telegram.org/bot$TOKEN";
         $update = json_decode(file_get_contents("php://input"), TRUE);
-        $chatID = $update["message"]["chat"]["id"];
-        $message = $update["message"]["text"];
+        // $chatID = $update["message"]["chat"]["id"]; 
+        $chatID = env('CHAT_ID'); # chatID didapatkan dari set domain webhook, maka ada param chat id dari return api telegram
+        $message = $request->message;
 
-        if (strpos($message, "/start") === 0) {
-
-            Http::post($api_url . "/sendmessage?chat_id=" . $chatID . "&text=Haloo, test chat ID = " . $chatID . ".&parse_mode=HTML");
-        }
+        Http::post($api_url . "/sendmessage?chat_id=" . $chatID . "&text=" . $message . ".&parse_mode=HTML");
 
         return response()->json([
             'status'    => true,
             'message'   => 'OK',
             'code'      => 200
         ]);
+    }
+
+    function set_webhook()
+    {
+        $TOKEN = "TOKEN BOT ANDA";
+        $apiURL = "https://api.telegram.org/bot$TOKEN";
+        $update = json_decode(file_get_contents("php://input"), TRUE);
+        $chatID = $update["message"]["chat"]["id"];
+        $message = $update["message"]["text"];
+
+        if (strpos($message, "/start") === 0) {
+
+            file_get_contents($apiURL . "/sendmessage?chat_id=" . $chatID . "&text=Haloo, test webhooks bykarya.myd.id.&parse_mode=HTML");
+        }
     }
 
     /**
